@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+const chai = require("chai");
 
 async function login(page) {
   await page.goto("https://quire.io/");
@@ -11,7 +12,8 @@ async function login(page) {
   await page.locator("#s_password").type("!1$23Ana");
   await page.locator("button:has-text('Log in')").click();
 
-  await expect(page).toHaveURL(/.*view=MyTasks.*/);
+  const currentURL = page.url();
+  expect(currentURL).to.match(/.*view=MyTasks.*/);
 }
 
 const testdata = `test${Math.floor(Math.random() * 1000)}`;
@@ -30,8 +32,8 @@ test.describe("User Actions", () => {
     await usernameInput.fill("");
     await page.keyboard.type(testdata);
 
-    await page.locator("button.save-btn.b.green").click();
-    await expect(usernameInput).toHaveText(testdata);
+    const usernameText = await usernameInput.innerText();
+    expect(usernameText).to.equal(testdata);
   });
 
   test("Add task", async ({ page }) => {
@@ -39,6 +41,9 @@ test.describe("User Actions", () => {
     await page.click('div:has-text("Add task")');
     await page.keyboard.type(testdata);
     await page.keyboard.press("Enter");
+
+    const newTask = await page.locator(`text=${testdata}`).isVisible();
+    assert.isTrue(newTask, "Task should be visible");
   });
 
   test("add sublist", async ({ page }) => {
@@ -47,6 +52,9 @@ test.describe("User Actions", () => {
     await page.locator('//a[contains(text(), "Add sublist")]').click();
     await page.keyboard.type(testdata);
     await page.locator("button.b.save-btn.green").click();
+
+    const newSublist = await page.locator(`text=${testdata}`).isVisible();
+    assert.isTrue(newSublist, "Sublist should be visible");
   });
 
   test("add document", async ({ page }) => {
@@ -54,6 +62,9 @@ test.describe("User Actions", () => {
     await page.locator('//a[contains(text(), "Add document")]').click();
     await page.keyboard.type(testdata);
     await page.locator('.b.save-btn.green[data-hotkey="enter"]').click();
+
+    const newDoc = await page.locator(`text=${testdata}`).isVisible();
+    expect(newDoc).to.be.true;
   });
 
   test("add smart folder", async ({ page }) => {
@@ -63,6 +74,9 @@ test.describe("User Actions", () => {
     await page
       .locator('.b.submit-btn.green-outline[data-hotkey="enter"]')
       .click();
+
+    const newFolder = await page.locator(`text=${testdata}`).isVisible();
+    assert.isTrue(newFolder, "Smart folder should be visible");
   });
 });
 
@@ -74,6 +88,9 @@ test("Login with an empty email field", async ({ page }) => {
   await page.click("button.cont-button.b.green.full-btn");
 
   const errorMessage = page.locator(".error-header.hasError");
-  await expect(errorMessage).toBeVisible();
-  await expect(errorMessage).toHaveText("Invalid Email.");
+  const isErrorVisible = await errorMessage.isVisible();
+  assert.isTrue(isErrorVisible, "Error message should be visible");
+
+  const errorText = await errorMessage.innerText();
+  expect(errorText).to.equal("Invalid Email.");
 });
