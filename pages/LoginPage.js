@@ -1,6 +1,4 @@
 import { BasePage } from "../core/BasePage";
-const chai = require("chai");
-const assert = chai.assert;
 
 export class LoginPage extends BasePage {
   constructor(page) {

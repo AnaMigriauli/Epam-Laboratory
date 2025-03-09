@@ -23,7 +23,7 @@ test.describe("User Actions", () => {
     );
   });
 
-  test("Edit user profile", async () => {
+  test("If user edits profile, username should update correctly", async () => {
     await profilePage.openProfile();
     await profilePage.editUsername(testdata);
 
@@ -35,21 +35,27 @@ test.describe("User Actions", () => {
     );
   });
 
-  test("Add sublist", async () => {
+  test("If user clicks on 'add sublist' on the task page, it should create a sublist", async () => {
     await myTasksPage.addSublist(testdata);
-    const isSublistVisible = await myTasksPage.isVisible(`text=${testdata}`);
+    const isSublistVisible = await myTasksPage.isVisible(
+      ".tab-item.s-item.active"
+    );
     assert.isTrue(isSublistVisible, "Sublist should be visible");
   });
 
-  test("Add document", async () => {
+  test("If user clicks on 'add document' on the task page, it should create a document", async () => {
     await myTasksPage.addDocument(testdata);
-    const isDocumentVisible = await myTasksPage.isVisible(`text=${testdata}`);
+    const isDocumentVisible = await myTasksPage.isVisible(
+      `.document-list .document-item:text("${testdata}")`
+    );
     assert.isTrue(isDocumentVisible, "Document should be visible");
   });
 
-  test("Add smart folder", async () => {
+  test("If user clicks on 'add smart folder', it should create smart folder", async () => {
     await myTasksPage.addSmartFolder(testdata);
-    const isFolderVisible = await myTasksPage.isVisible(`text=${testdata}`);
+    const isFolderVisible = await myTasksPage.isVisible(
+      ".cx-project-name.name"
+    );
     assert.isTrue(isFolderVisible, "Smart folder should be visible");
   });
 });
