@@ -12,7 +12,7 @@ export class LoginPage extends BasePage {
   }
 
   async login(userName, password) {
-    await this.navigateTo("https://quire.io/");
+    await this.navigateToPage("https://quire.io/");
     await this.click(this.loginBtn);
     await this.type(this.userNameField, userName);
     await this.click(this.continueBtn);

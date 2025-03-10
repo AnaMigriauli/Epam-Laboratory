@@ -1,8 +1,7 @@
 import { BasePage } from "../core/BasePage";
-const chai = require("chai");
-const assert = chai.assert;
+import { Helper } from "../core/Utils";
 
-export class TaskPage extends BasePage {
+export class MyTasksPage extends BasePage {
   constructor(page) {
     super(page);
     this.addTaskBtn = "a.i-btn.x32.icon-plus";
@@ -18,8 +17,7 @@ export class TaskPage extends BasePage {
   async addTask(taskName) {
     await this.click(this.addTaskBtn);
     await this.click(this.addTaskOption);
-    await this.page.keyboard.type(taskName);
-    await this.page.keyboard.press("Enter");
+    await Helper.typeAndEnter(this.page, selector, taskName);
   }
 
   async addSublist(sublistName) {
@@ -41,9 +39,5 @@ export class TaskPage extends BasePage {
     await this.click(this.smartFolderBtn);
     await this.page.keyboard.type(folderName);
     await this.click(this.submitBtn);
-  }
-
-  async isItemVisible(itemName) {
-    return this.page.locator(`text=${itemName}`).isVisible();
   }
 }

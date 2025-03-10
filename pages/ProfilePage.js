@@ -1,21 +1,26 @@
-import { test } from "@playwright/test";
-const chai = require("chai");
-const assert = chai.assert;
+import { BasePage } from "../core/BasePage";
+import { Helper } from "../core/Utils";
 
-import { ProfilePage } from "../pages/ProfilePage";
+const testdata = Helper.generateTestData();
 
-const testdata = `test${Math.floor(Math.random() * 1000)}`;
+export class ProfilePage extends BasePage {
+  constructor(page) {
+    super(page);
+    this.profileBtn = "'div.img-icon.x30.circle.bg.iconc-30'";
+    this.usernameField = "div.ql-editor.t-title-block";
+    this.saveBtn = "button.save-btn.b.green";
+  }
 
-test("Edit user profile", async ({ page }) => {
-  const profilePage = new ProfilePage(page);
+  async openProfile() {
+    await this.click(this.profileBtn);
+  }
 
-  await profilePage.openProfile();
-  await profilePage.editUsername(testdata);
+  async editUsername() {
+    await this.type(this.usernameField, testdata);
+    await this.click(this.saveBtn);
+  }
 
-  const updatedUsername = await profilePage.getUsername();
-  assert.equal(
-    updatedUsername,
-    testdata,
-    "Username should be updated correctly"
-  );
-});
+  async getUsername() {
+    return this.getText(this.usernameField);
+  }
+}

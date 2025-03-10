@@ -3,24 +3,18 @@ const chai = require("chai");
 const assert = chai.assert;
 
 import { LoginPage } from "../pages/LoginPage";
-import { MyTasksPage } from "../pages/MyTasksPage";
+import { MyTasksPage } from "../pages/MyTaskPage";
 import { ProfilePage } from "../pages/ProfilePage";
+import { Helper } from "../core/Utils";
 
-const testdata = `test${Math.floor(Math.random() * 1000)}`;
+const testdata = Helper.generateTestData();
 
 test.describe("User Actions", () => {
   let loginPage, profilePage, myTasksPage;
 
   test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    profilePage = new ProfilePage(page);
-    myTasksPage = new MyTasksPage(page);
-
-    await loginPage.login("anamigriauli1994@gmail.com", "!1$23Ana");
-    assert.isTrue(
-      await loginPage.isLoginSuccessful(),
-      "User should be logged in successfully"
-    );
+    ({ loginPage, profilePage, myTasksPage } =
+      await Helper.initializePagesAndLogin(page));
   });
 
   test("If user edits profile, username should update correctly", async () => {
