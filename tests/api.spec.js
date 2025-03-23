@@ -22,10 +22,9 @@ test.describe.serial("ClickUp API Tests", () => {
       },
     });
 
+    createdTaskId = response.data.id;
     expect(response.status).toBe(200);
     expect(response.data).toHaveProperty("id");
-
-    createdTaskId = response.data.id;
   });
 
   test("If user retrieves task data, it should return correct details", async () => {
